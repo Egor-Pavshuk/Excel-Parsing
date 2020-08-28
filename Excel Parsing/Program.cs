@@ -1,5 +1,4 @@
 ﻿using OfficeOpenXml;
-using Spire.Xls;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -21,20 +20,21 @@ namespace Excel_Parsing
 
             if (file.Extension.ToString() == ".xls")
             {
-                Workbook workbook = new Workbook();
-                workbook.LoadFromFile(file.FullName);
-                workbook.SaveToFile("Output.xlsx", ExcelVersion.Version2013);
+                var documet = new Aspose.Cells.Workbook(file.FullName);
+                documet.Save("Output.xlsx", Aspose.Cells.SaveFormat.Xlsx);
                 file = new FileInfo("Output.xlsx");
             }
 
             using (ExcelPackage excelPackage = new ExcelPackage(file))
             {
+                var uselessWorkSheet = excelPackage.Workbook.Worksheets.Last();
+                excelPackage.Workbook.Worksheets.Delete(uselessWorkSheet);
                 var worckSheet = excelPackage.Workbook.Worksheets.First();
                 var nail = worckSheet.Cells;
 
-                for (int i = 1; i < worckSheet.Dimension.Rows; i++)
+                for (int i = 1; i <= worckSheet.Dimension.Rows; i++)
                 {
-                    for (int j = 1; j < worckSheet.Dimension.Columns; j++)
+                    for (int j = 1; j <= worckSheet.Dimension.Columns; j++)
                     {
                         Console.Write(nail[i, j].Value?.ToString().Replace('і', 'i').Replace('І','I') + " ");
                     }
