@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -27,20 +28,24 @@ namespace Excel_Parsing
 
             using (ExcelPackage excelPackage = new ExcelPackage(file))
             {
-                var uselessWorkSheet = excelPackage.Workbook.Worksheets.Last();
-                excelPackage.Workbook.Worksheets.Delete(uselessWorkSheet);
-                var worckSheet = excelPackage.Workbook.Worksheets.First();
-                var nail = worckSheet.Cells;
-
-                for (int i = 1; i <= worckSheet.Dimension.Rows; i++)
+                try
                 {
-                    for (int j = 1; j <= worckSheet.Dimension.Columns; j++)
-                    {
-                        Console.Write(nail[i, j].Value?.ToString().Replace('і', 'i').Replace('І','I') + " ");
-                    }
-                    Console.WriteLine();
+                    excelPackage.Workbook.Worksheets.Delete("Evaluation Warning");
                 }
-                 
+                finally
+                {
+                    var worckSheet = excelPackage.Workbook.Worksheets.First();
+                    var nail = worckSheet.Cells;
+
+                    for (int i = 1; i <= worckSheet.Dimension.Rows; i++)
+                    {
+                        for (int j = 1; j <= worckSheet.Dimension.Columns; j++)
+                        {
+                            Console.Write(nail[i, j].Value?.ToString().Replace('і', 'i').Replace('І', 'I') + " ");
+                        }
+                        Console.WriteLine();
+                    }
+                }
             }
             file.Delete();
             Console.ReadKey();
